@@ -1,30 +1,30 @@
-/** EXTERNAL DEPENDENCIES */
+/** Externe Abhängigkeiten */
 const express = require('express');
 const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 
-/** ROUTERS */
+/** Routen */
 const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
 
-/** INIT */
+/** Initialisierung */
 const app = express();
 
-/** LOGGING */
+/** Protokollierung */
 app.use(logger('dev'));
 
-/** REQUEST PARSERS */
+/** Anfrage (Request) Parser */
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 
-/** STATIC FILES*/
+/** Statisch ausgelieferte Dateien */
 app.use(express.static(path.join(__dirname, 'public')));
 
-/** ROUTES */
+/** Routen */
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 
-/** EXPORT PATH */
+/** Export */
 module.exports = app;
