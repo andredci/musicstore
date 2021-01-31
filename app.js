@@ -31,8 +31,14 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 
+// Bevor ich die Routen-Middlewares hinzufüge
+// Packe ich die CORS header via Middleware in jede Antwort.
+const corsHeader = require("./middleware/cors");
+app.use(corsHeader);
+
 /** Statisch ausgelieferte Dateien */
 app.use(express.static(path.join(__dirname, 'public')));
+
 
 /** Routen */
 app.use('/', indexRouter);
