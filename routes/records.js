@@ -1,39 +1,23 @@
-/* Router für meine Musikaufnahmen. */
-
+/* Router für meine Musikaufnahmen. Basis Pfad /records/ (aus App.js) */
 const express = require('express');
 const router = express.Router();
 
-/* Ich will mit LowDB in ne lokale Datei schreiben */
-const low = require('lowdb');
-// Als Adapter verwende ich Syncrones (also blockierendes Schreiben in Dateien)
-const FileSync = require("lowdb/adapters/FileSync");
-// Hier wähle ich die Datei
-const adapter = new FileSync('records.json');
-// und hier mach ich mir meine Mock-Datenbank 
-const mockDB = low(adapter);
+const { recordsGetController, recordsPostController, recordsPutController, recordsDeleteController } = require('../controller/records-controller');
 
-mockDB.defaults({ records:[] }).write();
+// Verkürzte Schreibweise, um mehrere Methoden (GET/POST) für einen Routenendpunkt zu definieren.
+router
+    .route('/')
+        .get(recordsGetController)
+        .post(recordsPostController);
 
 
-// GET zum auflisten
-router.get('/', function(req, res, next) {
-  //res.send('ich zeige alle Produkte des Ladens als Array');
-  const aufnahmen = mockDB.get('records').value()
-  res.status(200).send(aufnahmen);
-});
+    
+router
+    // Hier definieren wir ein Stück Route mit Parameter.
+    // das nächste URL Segment nach /router/ wird in einen Parameter namens id eingelesen
+    .route('/:id')
+        .put(recordsPutController)
+        .delete(recordsDeleteController);
 
-// POST zum neu anlegen.
-router.post("/", (req, res, next) => {
-    //res.send("Eine neue Aufnahme im Bestand speichern.")
-    const aufnahme = req.body;
-    console.log("Body: " , req.body);
-    mockDB.get('records').push(aufnahme)
-        .last()
-        // Ich mach aus dem aktuellen Datum eine eindeutige ID für den Eintrag
-        .assign({ id: Date.now().toString() })
-        .write()
-
-    res.status(200).send(aufnahme);
-})
 
 module.exports = router;
