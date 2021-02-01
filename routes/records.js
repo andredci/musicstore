@@ -2,22 +2,27 @@
 const express = require('express');
 const router = express.Router();
 
-const { recordsGetController, recordsPostController, recordsPutController, recordsDeleteController } = require('../controller/records-controller');
+const {
+	recordsGetAllController,
+	recordsPostController,
+	recordsPutController,
+	recordsDeleteController,
+	recordsGetOneController
+} = require('../controller/records-controller');
 
-// Verkürzte Schreibweise, um mehrere Methoden (GET/POST) für einen Routenendpunkt zu definieren.
+// Verkürzte Schreibweise,
+// mehrere Methoden (GET/POST) für einen Endpunkt.
 router
-    .route('/')
-        .get(recordsGetController)
-        .post(recordsPostController);
+	.route('/')
+	.get(recordsGetAllController)
+	.post(recordsPostController);
 
-
-    
 router
-    // Hier definieren wir ein Stück Route mit Parameter.
-    // das nächste URL Segment nach /router/ wird in einen Parameter namens id eingelesen
-    .route('/:id')
-        .put(recordsPutController)
-        .delete(recordsDeleteController);
-
+	// Hier definieren wir ein Stück Route mit Parameter.
+	// das nächste URL Segment nach /router/ wird in einen Parameter namens id eingelesen
+	.route('/:id')
+	.get(recordsGetOneController)
+	.put(recordsPutController)
+	.delete(recordsDeleteController);
 
 module.exports = router;
