@@ -34,6 +34,8 @@ app.use(cookieParser());
 // Bevor ich die Routen-Middlewares hinzufüge
 // Packe ich die CORS header via Middleware in jede Antwort.
 const corsHeader = require("./middleware/cors");
+const { EINPROGRESS } = require('constants');
+const { recordsDeleteController } = require('./controller/records-controller');
 app.use(corsHeader);
 
 /** Statisch ausgelieferte Dateien */
@@ -45,6 +47,36 @@ app.use('/', indexRouter);
 app.use('/users', usersRouter);
 // Aufnahmen-Router unter /records einfügen
 app.use("/records", recordsRouter);
+
+/** Fehlerbehandlung */
+// eine Fehlermeldung für alle nicht definierte Pfade:
+app.get('*', (req,res, next) =>{
+  // Fehler werfen: 
+  let fehler = new Error('Diesen Pfad gibt es nicht')
+  fehler.statusCode = 404;
+  // weitergeben an nächster Middleware
+  next(fehler)
+})
+
+
+// usere Fehler middle ware: 
+app.use((error, req,res,next) => {
+  // fehlermeldung auf der Console ausgeben:
+  console.log('Unser FehlerMiddleware', error);
+  // fehlermedlung senden:
+  // status im header setzen:
+  res.status(error.statusCode)
+  // // wir senden ein Error objekt zurück zum Frontend
+  res.send({
+    error: {
+      status: error.statusCode,
+      mitteilung: error.message 
+    }
+  })
+  // nur code schicken: Eine Alternative:
+  // res.sendStatus(404)
+
+})
 
 /** Export */
 module.exports = app;
