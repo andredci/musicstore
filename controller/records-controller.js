@@ -7,50 +7,58 @@ const adapter = new FileSync('records.json');
 // und hier mach ich mir meine Mock-Datenbank 
 const mockDB = low(adapter);
 
-mockDB.defaults({ records:[] }).write();
+mockDB.defaults({ records: [] }).write();
 
 
 const recordsGetController = (req, res, next) => {
-    //res.send('ich zeige alle Produkte des Ladens als Array');
-    const aufnahmen = mockDB.get('records').value()
-    res.status(200).send(aufnahmen);
-  }
+  //res.send('ich zeige alle Produkte des Ladens als Array');
+  const aufnahmen = mockDB.get('records').value()
+  res.status(200).send(aufnahmen);
+}
 
 const recordsPostController = (req, res, next) => {
-    //res.send("Eine neue Aufnahme im Bestand speichern.")
-    const aufnahme = req.body;
-    console.log("Body: " , req.body);
+  //res.send("Eine neue Aufnahme im Bestand speichern.")
+  const aufnahme = req.body;
+  console.log("Body: ", req.body);
+  // prüfen, ob im aufnahme auch inhalte sind, band, titel, jahr
+  if (aufnahme.band && aufnahme.titel && aufnahme.jahr) {
     mockDB.get('records').push(aufnahme)
-        .last()
-        // Ich mach aus dem aktuellen Datum eine eindeutige ID für den Eintrag
-        .assign({ id: Date.now().toString() })
-        .write()
+      .last()
+      // Ich mach aus dem aktuellen Datum eine eindeutige ID für den Eintrag
+      .assign({ id: Date.now().toString() })
+      .write()
 
-/* Alternative Schreibweise
-        mockDB.get('records')
-        mockDB.push(aufnahme)
-        mockDB.last()
-        // Ich mach aus dem aktuellen Datum eine eindeutige ID für den Eintrag
-        mockDB.assign({ id: Date.now().toString() })
-        mockDB.write()
-*/
+    /* Alternative Schreibweise
+            mockDB.get('records')
+            mockDB.push(aufnahme)
+            mockDB.last()
+            // Ich mach aus dem aktuellen Datum eine eindeutige ID für den Eintrag
+            mockDB.assign({ id: Date.now().toString() })
+            mockDB.write()
+    */
 
     res.status(200).send(aufnahme);
+  } else {
+    // daten fehlen, wirf einen Fehler!
+    let error = new Error('Titel, Band und Jahr müssen definiert sein')
+    error.statusCode = 500;
+    throw error
+  }
 }
 
 const recordsPutController = (req, res, next) => {
-    // das Segment nach /records/ ist meine ID zum ändern
-    // z.b: Localhost:3001/records/1235 => req.params.id = 1235
-    const zuÄnderndeID = req.params.id;
-    res.send('ich ändere das Album mit ID:'+ zuÄnderndeID);
-   
-  }
+  // das Segment nach /records/ ist meine ID zum ändern
+  // z.b: Localhost:3001/records/1235 => req.params.id = 1235
+  const zuÄnderndeID = req.params.id;
+  res.send('ich ändere das Album mit ID:' + zuÄnderndeID);
+
+}
 
 
-  const recordsDeleteController = (req, res, next) => {
-    const zuLöschendesAlbum = req.params.id;
-    res.send('ich lösche das Album mit ID:'+ zuLöschendesAlbum);
-  }
+const recordsDeleteController = (req, res, next) => {
+  const zuLöschendesAlbum = req.params.id;
+  res.send('ich lösche das Album mit ID:' + zuLöschendesAlbum);
+}
 
 
-module.exports = {recordsGetController, recordsPostController, recordsPutController, recordsDeleteController};
+module.exports = { recordsGetController, recordsPostController, recordsPutController, recordsDeleteController };

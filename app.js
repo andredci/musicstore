@@ -34,8 +34,7 @@ app.use(cookieParser());
 // Bevor ich die Routen-Middlewares hinzufüge
 // Packe ich die CORS header via Middleware in jede Antwort.
 const corsHeader = require("./middleware/cors");
-const { EINPROGRESS } = require('constants');
-const { recordsDeleteController } = require('./controller/records-controller');
+
 app.use(corsHeader);
 
 /** Statisch ausgelieferte Dateien */
