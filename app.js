@@ -3,6 +3,9 @@ const express = require('express');
 const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
+// für die Fehlerbehandlung mit http-errors
+const createError = require('http-errors')
+
 
 /* Ich will mit LowDB in ne lokale Datei schreiben */
 const low = require('lowdb');
@@ -53,8 +56,11 @@ app.get('*', (req,res, next) =>{
   // Fehler werfen: 
   let fehler = new Error('Diesen Pfad gibt es nicht')
   fehler.statusCode = 404;
+  // FEHLER EXTRA: wir können fehler-Objekte auch mit dem Paket http-errors erstellen:
+  const fehlerKurz = createError(404, 'Diesen Pfad gibt es nicht')
+
   // weitergeben an nächster Middleware
-  next(fehler)
+  next(fehlerKurz)
 })
 
 
