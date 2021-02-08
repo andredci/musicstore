@@ -4,6 +4,28 @@ Diese Datei enthält die Liste der Änderungen, die in jeder Phase gemacht werde
 Sie ist zeitlich umgekehrt sortiert, also stehen die letzten / neusten Änderungen oben in der Datei. 
 So muss nicht immer bis ganz runter gescrollt werden.
 
+
+## Aufgabe 04 - Mongoose und Seeding
+
+Unter Seeding versteht man dass anfängliche Füllen einer neu eingerichteten Datenbank. (engl. für Sähen)
+
+In dieser Aufgabe führen wir Mongoosee ein. Mongoose ist eine Bibliothek für Objekt-Daten-Modellierung (ODM) für MongoDB und Node.js.
+Es verwaltet die Beziehung zwischen Daten, stellt Schemen-Validierung bereit und wird benutzt, um Objekte im Code und deren Repräsentation in der Datenbank (MongoDB) zu übersetzen.
+
+Wir installieren und konfigurieren Mongoose für unser Projent und verbinden es mit unserer App. Wir erstellen unsere Modelle und Schemas und definieren damit genau, wie eine Aufnahme, ein Nutzer und eine Bestellung (record / user / order ) aussehen werden.
+
+Zusätzlich werden wir eine Funktion schreiben, die unsere Datenbank mit Startdaten füllt (Seeding oder auch Feeding genannt). So können wir später alle Endpunkte direkt nach Initalisierung unseres Servers testen.
+
+**Die Schritte**:
+
+1. Konfiguriere Mongoose für unseren Datenserver. Dazu installiere zunächst das Paket [mongoose](https://www.npmjs.com/package/mongoose)
+2. Erstelle Datenschemen und Modelle für unsere Aufnahmen, Nutzer und Bestellungen (records / user / orders)
+3. Schreib ein Pflanz/Futter-Script mit Hilfe des npm-Pakets [faker](https://www.npmjs.com/package/faker). Wenn die Datenbank leer ist (z.B. nach einem frischen Clonen, füll es mit ein paar Alben Nutzern und Bestellungen.
+
+**Noch nicht**:
+Du musst noch _nicht deine Controller umbauen_, um die Daten aus MongoDB statt lowdb zu laden und dorthin zu speichern, das kommt in erst Aufgabe 5.
+
+
 ## Aufgabe 03 - Routing und Fehlerbehandlung
 
 In der ersten Aufgabe haben wir gesehen, dass es Anfragen wie `GET` und `POST` gibt, die bestimmen, was die Funktion des Endpunktes ist. (Abfragen, Erstellen in unserem Fall)
