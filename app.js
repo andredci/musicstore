@@ -4,9 +4,6 @@ const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 
-/** Import für die Datenbank vereinheitlicht */
-const db = require('./db.js');
-
 /** Routen */
 const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
@@ -15,6 +12,34 @@ const orderRouter = require('./routes/orders');
 
 /** Initialisierung */
 const app = express();
+/* 
+// Mongoose Modul importieren  
+const mongoose = require("mongoose");
+
+// Simpler Adressstring: Protokoll ://  Host : Port / Datenbank  
+let addressString = "mongodb://localhost:27017/datenbank";
+let optionen = { useNewUrlParser: true, useUnifiedTopology: true };
+
+// Verbindung für das Mongoose Modul herstellen mit Connect 
+mongoose.connect(addressString, optionen);
+
+// für üblich verwenden wir immer eine zentrale connection aus dem mongoose Modul 
+let db = mongoose.connection;
+
+// Ereignishandler für Fehler 
+db.on('error', (fehler) => {
+    console.error("Fehler mit MongoDB: "+fehler);
+});
+
+// Ereignishandler für Verbindungsaufbau 
+db.on('open', ()=> {
+    console.log("Bin mit der Datenbank verbunden");
+})
+ */
+
+// Extern konfigurierte Datenbankverbindung//
+const verbindeDB = require("./mongo-db");
+verbindeDB();
 
 /** Protokollierung aus NPM-Paket morgan */
 app.use(logger('dev'));
