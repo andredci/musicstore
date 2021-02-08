@@ -2,7 +2,7 @@
 const mongoose = require("mongoose");
 
 /** Simpler Adressstring: Protokoll ://  Host : Port / Datenbank  */
-let addressString = "mongodb://localhost:27017/datenbank";
+let addressString = process.env.mongo || "mongodb://localhost:27017/datenbank";
 let optionen = { useNewUrlParser: true, useUnifiedTopology: true };
 
 const verbindeDB = () => {
