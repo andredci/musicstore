@@ -1,7 +1,10 @@
 #!/usr/bin/env node
 
+// Umgebungsvariablen holen
+require('dotenv').config()
+
 /**
- * Module dependencies.
+ * Modul abhängigkeiten.
  */
 
 const app = require('../app');
@@ -9,20 +12,22 @@ const debug = require('debug')('record-shop:server');
 const http = require('http');
 
 /**
- * Get port from environment and store in Express.
+ * Port aus Umgebung holen (in entwicklung aus .env, auf heroku wird er von der plattform eingepflanzt)
  */
 
-const port = normalizePort(process.env.PORT || '3001');
+const port = normalizePort(process.env.PORT || '3000');
 app.set('port', port);
 
 /**
- * Create HTTP server.
+ * HTTP-Server erstellen. 
+ * Das Expressobjekt, das wir in unserer app.js konfigurieren 
+ * ist die "Listener-Funktion" für Anfragen am HTTP Server.
  */
 
 const server = http.createServer(app);
 
 /**
- * Listen on provided port, on all network interfaces.
+ * Und jetzt wird auf dem eingestellten Port gelauscht was passiert.
  */
 
 server.listen(port);
@@ -30,7 +35,8 @@ server.on('error', onError);
 server.on('listening', onListening);
 
 /**
- * Normalize a port into a number, string, or false.
+ * Port in eine Zahl umwandeln wenn möglich, 
+ * (ggf. ist es eine named Pipe oder false)
  */
 
 function normalizePort(val) {
