@@ -3,26 +3,32 @@ const express = require('express');
 const router = express.Router();
 
 const {
-	recordsGetAllController,
-	recordsPostController,
-	recordsPutController,
-	recordsDeleteController,
-	recordsGetOneController
+    alleRecords,
+	erstelleRecord,
+	aktualisiereRecord,
+	löscheRecord,
+	einRecord
 } = require('../controller/records-controller');
 
 // Verkürzte Schreibweise,
 // mehrere Methoden (GET/POST) für einen Endpunkt.
 router
 	.route('/')
-	.get(recordsGetAllController)
-	.post(recordsPostController);
+	.get(alleRecords)
+	.post(erstelleRecord)
+	.put((res, req,next) => {
+		res.status(422).send("PUT braucht eine ID im URL-Segment")
+	})
+	.delete((res, req, next) => {
+		res.status(422).send("DELETE braucht eine ID im URL-Segment")
+	})
 
 router
 	// Hier definieren wir ein Stück Route mit Parameter.
 	// das nächste URL Segment nach /router/ wird in einen Parameter namens id eingelesen
 	.route('/:id')
-	.get(recordsGetOneController)
-	.put(recordsPutController)
-	.delete(recordsDeleteController);
+	.get(einRecord)
+	.put(aktualisiereRecord)
+	.delete(löscheRecord);
 
 module.exports = router;

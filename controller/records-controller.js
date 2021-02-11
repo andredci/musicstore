@@ -1,65 +1,64 @@
-// Vereinheitlicht Datenbank
-const db = require('../db');
+// Recordsmodell importieren
+const Record = require('../models/recordmodel');
 
-exports.recordsGetAllController = (req, res, next) => {
-	//res.send('ich zeige alle Produkte des Ladens als Array');
-	const aufnahmen = db
-		.get('records')
-		.value()
-	res.status(200).send(aufnahmen);
+exports.alleRecords = (req, res, next) => {
+	Record.find().then(
+		(ergebnis) => {
+			res.status(200).send(ergebnis);
+		}
+	).catch( (fehler) => {
+		res.status(500).send("Fehler bei Record.find(): "+fehler);
+	});
 }
 
-exports.recordsPostController = (req, res, next) => {
+exports.erstelleRecord = (req, res, next) => {
 	//res.send("Eine neue Aufnahme im Bestand speichern.")
 	const aufnahme = req.body;
-	db
-		.get('records')
-		.push(aufnahme)
-		.last()
-		// Ich mach aus dem aktuellen Datum eine eindeutige ID für den Eintrag
-		.assign({ id: Date.now().toString() })
-		.write()
-	res.status(200).send(aufnahme);
+
+	Record.create(aufnahme).then(
+		(ergebnis) => {
+			res.status(201).send(ergebnis);
+		}
+	).catch( (fehler) => {
+		res.status(500).send("Fehler bei Record.create(): "+fehler);
+	});
 }
 
-exports.recordsGetOneController = (req, res, next) => {
-	// das Segment nach /records/ ist meine ID zum ändern
-	// z.b: localhost:3001/records/1235 => req.params.id = 1235
-	const { id } = req.params;
-	const record = db
-		.get('records')
-		.find({ id });
-	res
-		.status(200)
-		.send(record);
-
-	//res.send('gebe nur das eine Album zurück mit ID:' + id);
-}
-
-exports.recordsPutController = (req, res, next) => {
+exports.einRecord = (req, res, next) => {
 	// das Segment nach /records/ ist meine ID zum ändern
 	// z.b: localhost:3001/records/1235 => req.params.id = 1235
 	const { id } = req.params;
 
+	Record.find({_id: id}).then(
+		(ergebnis) => {
+			res.status(200).send(ergebnis);
+		}
+	).catch( (fehler) => {
+		res.status(500).send(`Fehler bei Record.find(_id: ${id}): `+fehler);
+	});
+}
+
+exports.aktualisiereRecord = (req, res, next) => {
+	// das Segment nach /records/ ist meine ID zum ändern
+	// z.b: localhost:3001/records/1235 => req.params.id = 1235
+	const { id } = req.params;
 	const geänderteWerte = req.body;
-	const Aufnahme = db
-		.get('records')
-		.find({ id })
-		.assign(geänderteWerte)
-		.write();
-	res.status(200).send(Aufnahme);
 
-	//res.send('ich ändere das Album mit ID:' + id);
-
+	Record.findOneAndUpdate({_id: id}, geänderteWerte).then(
+		(ergebnis) => {
+			res.status(200).send(ergebnis);
+		}
+	).catch( (fehler) => {
+		res.status(500).send(`Fehler bei Record.findOneAndUpdate(_id: ${id}`+fehler);
+	});
 }
 
-exports.recordsDeleteController = (req, res, next) => {
+exports.löscheRecord = (req, res, next) => {
 
 	const { id } = req.params;
-	const record = db
-		.get('records')
-		.remove({ id })
-		.write();
-	res.status(200).send(record);
-	//res.send('ich lösche die Aufnahme mit ID:' + id);
+	Record.deleteOne({_id : id}).then( (ergebnis) => {
+		res.status(200).send(ergebnis);
+	}).catch( (fehler) => {
+		res.status(500).send(`Fehler bei Record.deleteOne(_id: ${id}`+fehler);
+	})
 }
