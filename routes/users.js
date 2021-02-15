@@ -8,7 +8,13 @@ const {
 router
     .route('/')
         .get(alleNutzer)
-        .post(erstelleNutzer);
+        .post(erstelleNutzer)
+        .put((res, req,next) => {
+          res.status(422).send("PUT braucht eine ID im URL-Segment")
+        })
+        .delete((res, req, next) => {
+          res.status(422).send("DELETE braucht eine ID im URL-Segment")
+        })
 
 router
     .route('/:nutzerID')
